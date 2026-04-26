@@ -29,19 +29,29 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "M2 — Digital Authority Engine" },
+      {
+        name: "description",
+        content:
+          "Africa's first digital authority engine. Get verified, get ranked, get customers. SEO, trust, and AI visibility scoring for businesses in Somaliland and beyond.",
+      },
+      { name: "author", content: "M2 Digital" },
+      { property: "og:title", content: "M2 — Digital Authority Engine" },
+      {
+        property: "og:description",
+        content:
+          "The intelligence platform that turns your business into a trusted, high-ranking authority across Google, AI search, and social.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap",
       },
     ],
   }),
@@ -65,5 +75,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <div className="flex min-h-screen flex-col bg-background">
+      <SiteHeader />
+      <main className="flex-1 pt-[68px]">
+        <Outlet />
+      </main>
+      <SiteFooter />
+    </div>
+  );
 }
