@@ -26,7 +26,7 @@ const ALL = [
   { name: "Dahabshiil Bank", city: "Hargeisa", category: "Banking", score: 94, status: "Verified", color: "var(--primary)" },
   { name: "Telesom", city: "Hargeisa", category: "Telecom", score: 91, status: "Premium", color: "var(--gold)" },
   { name: "Somtel", city: "Hargeisa", category: "Telecom", score: 88, status: "Verified", color: "#5a7fbe" },
-  { name: "Edna Hospital", city: "Hargeisa", category: "Healthcare", score: 86, status: "Verified", color: "#c0392b" },
+  { name: "Edna Adan Hospital", city: "Hargeisa", category: "Healthcare", score: 86, status: "Verified", color: "#c0392b" },
   { name: "University of Hargeisa", city: "Hargeisa", category: "Education", score: 84, status: "Verified", color: "#2d5a7f" },
   { name: "Berbera Port", city: "Berbera", category: "Logistics", score: 82, status: "Verified", color: "#1e6091" },
   { name: "Premier Bank", city: "Hargeisa", category: "Banking", score: 80, status: "Premium", color: "#0e7c5a" },
@@ -35,27 +35,50 @@ const ALL = [
   { name: "Burao Construction Co.", city: "Burao", category: "Construction", score: 73, status: "Pending", color: "#7a6a3a" },
   { name: "GollisNet", city: "Hargeisa", category: "Technology", score: 71, status: "Verified", color: "#2d6a8f" },
   { name: "Cadaado NGO", city: "Hargeisa", category: "NGO", score: 68, status: "Verified", color: "#5a8a55" },
+  { name: "Salaam Bank", city: "Hargeisa", category: "Banking", score: 77, status: "Verified", color: "#0d6e4f" },
+  { name: "Somcable", city: "Berbera", category: "Telecom", score: 74, status: "Premium", color: "#6a3aa0" },
+  { name: "Manhal Hospital", city: "Hargeisa", category: "Healthcare", score: 70, status: "Verified", color: "#a83232" },
+  { name: "Gollis University", city: "Hargeisa", category: "Education", score: 72, status: "Verified", color: "#3a4d8a" },
+  { name: "Hargeisa Cultural Centre", city: "Hargeisa", category: "NGO", score: 66, status: "Verified", color: "#6f8a4a" },
+  { name: "Bashir Trading", city: "Burao", category: "Retail", score: 62, status: "Pending", color: "#a05a2c" },
+  { name: "M2 Studio", city: "Hargeisa", category: "Technology", score: 81, status: "Premium", color: "#d4a849" },
+  { name: "Berbera Logistics Hub", city: "Berbera", category: "Logistics", score: 75, status: "Verified", color: "#1a5380" },
+  { name: "Borama Health Clinic", city: "Borama", category: "Healthcare", score: 64, status: "Pending", color: "#9a3a3a" },
+  { name: "Sahan Construction", city: "Hargeisa", category: "Construction", score: 69, status: "Verified", color: "#7a6038" },
+  { name: "Saryan Foods", city: "Burao", category: "Retail", score: 60, status: "Pending", color: "#b06030" },
+  { name: "Horyaal Tech", city: "Hargeisa", category: "Technology", score: 67, status: "Verified", color: "#26678a" },
+  { name: "Borama Microfinance", city: "Borama", category: "Banking", score: 63, status: "Verified", color: "#0a6b50" },
+  { name: "Somaliland Beverages", city: "Hargeisa", category: "Retail", score: 79, status: "Premium", color: "#8a4a2a" },
+  { name: "Burao Education Trust", city: "Burao", category: "Education", score: 65, status: "Verified", color: "#4a3a8a" },
+  { name: "Hargeisa Shipping", city: "Hargeisa", category: "Logistics", score: 71, status: "Verified", color: "#16517a" },
 ];
 
 const CATEGORIES = ["All Categories", "Banking", "Telecom", "Construction", "Healthcare", "Education", "Retail", "Logistics", "Technology", "NGO"];
 const CITIES = ["All Cities", "Hargeisa", "Berbera", "Burao", "Borama"];
 const STATUSES = ["All Status", "Verified", "Premium", "Pending"];
+const SORTS = ["Highest score", "Lowest score", "A → Z"];
 
 function RankingsPage() {
   const [cat, setCat] = useState("All Categories");
   const [city, setCity] = useState("All Cities");
   const [status, setStatus] = useState("All Status");
+  const [sort, setSort] = useState("Highest score");
+  const [q, setQ] = useState("");
 
-  const filtered = useMemo(
-    () =>
-      ALL.filter(
-        (r) =>
-          (cat === "All Categories" || r.category === cat) &&
-          (city === "All Cities" || r.city === city) &&
-          (status === "All Status" || r.status === status),
-      ),
-    [cat, city, status],
-  );
+  const filtered = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    const list = ALL.filter(
+      (r) =>
+        (cat === "All Categories" || r.category === cat) &&
+        (city === "All Cities" || r.city === city) &&
+        (status === "All Status" || r.status === status) &&
+        (!needle || r.name.toLowerCase().includes(needle) || r.category.toLowerCase().includes(needle)),
+    );
+    if (sort === "Lowest score") list.sort((a, b) => a.score - b.score);
+    else if (sort === "A → Z") list.sort((a, b) => a.name.localeCompare(b.name));
+    else list.sort((a, b) => b.score - a.score);
+    return list;
+  }, [cat, city, status, sort, q]);
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20">
@@ -68,13 +91,21 @@ function RankingsPage() {
       </div>
 
       <div className="mb-7 flex flex-wrap gap-3">
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search business or category…"
+          className="min-w-[220px] flex-1 rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary-mid focus:ring-2 focus:ring-primary/15"
+        />
         <FilterSelect value={cat} onChange={setCat} options={CATEGORIES} />
         <FilterSelect value={city} onChange={setCity} options={CITIES} />
         <FilterSelect value={status} onChange={setStatus} options={STATUSES} />
+        <FilterSelect value={sort} onChange={setSort} options={SORTS} />
         <div className="ml-auto self-center text-sm text-ink-muted">
-          Showing <span className="font-semibold text-ink">{filtered.length}</span> businesses
+          Showing <span className="font-semibold text-ink">{filtered.length}</span> of {ALL.length}
         </div>
       </div>
+
 
       <div className="hidden grid-cols-[64px_1fr_140px_100px_110px_130px] gap-4 px-6 py-3 text-xs font-bold uppercase tracking-wider text-ink-muted md:grid">
         <div>Rank</div>
