@@ -16,6 +16,7 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CheckRouteImport } from './routes/check'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiStudioGenerateRouteImport } from './routes/api/studio.generate'
 
 const StudioRoute = StudioRouteImport.update({
   id: '/studio',
@@ -52,6 +53,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiStudioGenerateRoute = ApiStudioGenerateRouteImport.update({
+  id: '/api/studio/generate',
+  path: '/api/studio/generate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/rankings': typeof RankingsRoute
   '/studio': typeof StudioRoute
+  '/api/studio/generate': typeof ApiStudioGenerateRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/rankings': typeof RankingsRoute
   '/studio': typeof StudioRoute
+  '/api/studio/generate': typeof ApiStudioGenerateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/rankings': typeof RankingsRoute
   '/studio': typeof StudioRoute
+  '/api/studio/generate': typeof ApiStudioGenerateRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/rankings'
     | '/studio'
+    | '/api/studio/generate'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/rankings'
     | '/studio'
+    | '/api/studio/generate'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/rankings'
     | '/studio'
+    | '/api/studio/generate'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +131,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   RankingsRoute: typeof RankingsRoute
   StudioRoute: typeof StudioRoute
+  ApiStudioGenerateRoute: typeof ApiStudioGenerateRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/studio/generate': {
+      id: '/api/studio/generate'
+      path: '/api/studio/generate'
+      fullPath: '/api/studio/generate'
+      preLoaderRoute: typeof ApiStudioGenerateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,7 +203,17 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   RankingsRoute: RankingsRoute,
   StudioRoute: StudioRoute,
+  ApiStudioGenerateRoute: ApiStudioGenerateRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
