@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as RankingsRouteImport } from './routes/rankings'
+import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -26,6 +27,11 @@ const StudioRoute = StudioRouteImport.update({
 const RankingsRoute = RankingsRouteImport.update({
   id: '/rankings',
   path: '/rankings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
+  '/projects': typeof ProjectsRoute
   '/rankings': typeof RankingsRoute
   '/studio': typeof StudioRoute
   '/api/studio/generate': typeof ApiStudioGenerateRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
+  '/projects': typeof ProjectsRoute
   '/rankings': typeof RankingsRoute
   '/studio': typeof StudioRoute
   '/api/studio/generate': typeof ApiStudioGenerateRoute
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
+  '/projects': typeof ProjectsRoute
   '/rankings': typeof RankingsRoute
   '/studio': typeof StudioRoute
   '/api/studio/generate': typeof ApiStudioGenerateRoute
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/pricing'
     | '/profile'
+    | '/projects'
     | '/rankings'
     | '/studio'
     | '/api/studio/generate'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/pricing'
     | '/profile'
+    | '/projects'
     | '/rankings'
     | '/studio'
     | '/api/studio/generate'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/pricing'
     | '/profile'
+    | '/projects'
     | '/rankings'
     | '/studio'
     | '/api/studio/generate'
@@ -129,6 +141,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   PricingRoute: typeof PricingRoute
   ProfileRoute: typeof ProfileRoute
+  ProjectsRoute: typeof ProjectsRoute
   RankingsRoute: typeof RankingsRoute
   StudioRoute: typeof StudioRoute
   ApiStudioGenerateRoute: typeof ApiStudioGenerateRoute
@@ -148,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/rankings'
       fullPath: '/rankings'
       preLoaderRoute: typeof RankingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -201,6 +221,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   PricingRoute: PricingRoute,
   ProfileRoute: ProfileRoute,
+  ProjectsRoute: ProjectsRoute,
   RankingsRoute: RankingsRoute,
   StudioRoute: StudioRoute,
   ApiStudioGenerateRoute: ApiStudioGenerateRoute,
