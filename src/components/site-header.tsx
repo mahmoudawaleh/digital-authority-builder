@@ -7,6 +7,7 @@ const navItems = [
   { to: "/check", label: "Score Checker" },
   { to: "/dashboard", label: "Dashboard" },
   { to: "/studio", label: "AI Studio" },
+  { to: "/projects", label: "Projects" },
   { to: "/pricing", label: "Pricing" },
 ] as const;
 
