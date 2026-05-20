@@ -14,6 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
+      organizations: {
+        Row: {
+          address: string | null
+          bio_en: string | null
+          bio_so: string | null
+          brand_color: string | null
+          category: string
+          city: string
+          completeness: number
+          country: string
+          created_at: string
+          email: string | null
+          featured: boolean
+          id: string
+          logo_url: string | null
+          name: string
+          owner_client_id: string | null
+          phone: string | null
+          slug: string
+          socials: Json
+          trust_score: number
+          updated_at: string
+          verification_status: string
+          website: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          address?: string | null
+          bio_en?: string | null
+          bio_so?: string | null
+          brand_color?: string | null
+          category?: string
+          city?: string
+          completeness?: number
+          country?: string
+          created_at?: string
+          email?: string | null
+          featured?: boolean
+          id?: string
+          logo_url?: string | null
+          name: string
+          owner_client_id?: string | null
+          phone?: string | null
+          slug: string
+          socials?: Json
+          trust_score?: number
+          updated_at?: string
+          verification_status?: string
+          website?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          address?: string | null
+          bio_en?: string | null
+          bio_so?: string | null
+          brand_color?: string | null
+          category?: string
+          city?: string
+          completeness?: number
+          country?: string
+          created_at?: string
+          email?: string | null
+          featured?: boolean
+          id?: string
+          logo_url?: string | null
+          name?: string
+          owner_client_id?: string | null
+          phone?: string | null
+          slug?: string
+          socials?: Json
+          trust_score?: number
+          updated_at?: string
+          verification_status?: string
+          website?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
       studio_projects: {
         Row: {
           client_id: string
