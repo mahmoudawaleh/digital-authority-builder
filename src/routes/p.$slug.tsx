@@ -89,7 +89,7 @@ function PublicProfile() {
     URL.revokeObjectURL(url);
   };
 
-  const status = STATUS_LABEL[o.verification_status];
+  const status = STATUS_LABEL[o.verification_status as keyof typeof STATUS_LABEL] ?? STATUS_LABEL.none;
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10 md:px-10 md:py-16">
