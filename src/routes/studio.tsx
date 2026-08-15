@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, useSearch, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { getStudioProject, saveStudioProject } from "@/lib/studio-projects.functions";
 import { getClientId } from "@/lib/client-id";
 import { toast } from "sonner";
 
@@ -57,21 +57,21 @@ function StudioPage() {
     const id = search.project;
     if (!id || id === loadedId) return;
     (async () => {
-      const { data, error } = await supabase
-        .from("studio_projects")
-        .select("*")
-        .eq("id", id)
-        .maybeSingle();
-      if (error || !data) {
+      try {
+        const { project } = await getStudioProject({
+          data: { id, client_id: getClientId() },
+        });
+        if (!project) throw new Error("not found");
+        setActive(project.tool as ToolId);
+        setInputs((project.inputs ?? {}) as Record<string, string>);
+        setOutput(project.output ?? "");
+        setLoadedId(id);
+      } catch {
         toast.error("Couldn't load project");
-        return;
       }
-      setActive(data.tool as ToolId);
-      setInputs((data.inputs ?? {}) as Record<string, string>);
-      setOutput(data.output ?? "");
-      setLoadedId(id);
     })();
   }, [search.project, loadedId]);
+
 
   const setField = (k: string, v: string) => setInputs((p) => ({ ...p, [k]: v }));
 
@@ -128,24 +128,21 @@ function StudioPage() {
       inputs,
       output,
     };
-    if (loadedId) {
-      const { error } = await supabase
-        .from("studio_projects")
-        .update({ ...payload, updated_at: new Date().toISOString() })
-        .eq("id", loadedId);
-      if (error) return toast.error("Couldn't update project");
-      toast.success("Project updated");
-    } else {
-      const { data, error } = await supabase
-        .from("studio_projects")
-        .insert(payload)
-        .select("id")
-        .single();
-      if (error || !data) return toast.error("Couldn't save project");
-      setLoadedId(data.id);
-      navigate({ to: "/studio", search: { project: data.id } });
-      toast.success("Saved to Projects");
+    try {
+      const { id } = await saveStudioProject({
+        data: loadedId ? { ...payload, id: loadedId } : payload,
+      });
+      if (loadedId) {
+        toast.success("Project updated");
+      } else {
+        setLoadedId(id);
+        navigate({ to: "/studio", search: { project: id } });
+        toast.success("Saved to Projects");
+      }
+    } catch {
+      toast.error(loadedId ? "Couldn't update project" : "Couldn't save project");
     }
+
   };
 
   const copy = async () => {

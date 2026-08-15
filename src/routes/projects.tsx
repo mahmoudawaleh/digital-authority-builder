@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 import { getClientId } from "@/lib/client-id";
+import { listStudioProjects, deleteStudioProject } from "@/lib/studio-projects.functions";
 import { toast } from "sonner";
+
 
 type Project = {
   id: string;
@@ -41,26 +42,26 @@ function ProjectsPage() {
 
   useEffect(() => {
     (async () => {
-      const { data, error } = await supabase
-        .from("studio_projects")
-        .select("id, tool, title, output, created_at, updated_at")
-        .eq("client_id", getClientId())
-        .order("created_at", { ascending: false });
-      if (error) {
+      try {
+        const { projects } = await listStudioProjects({ data: { client_id: getClientId() } });
+        setProjects(projects as Project[]);
+      } catch {
         toast.error("Couldn't load projects");
         setProjects([]);
-        return;
       }
-      setProjects((data ?? []) as Project[]);
     })();
   }, []);
 
   const remove = async (id: string) => {
-    const { error } = await supabase.from("studio_projects").delete().eq("id", id);
-    if (error) return toast.error("Couldn't delete project");
+    try {
+      await deleteStudioProject({ data: { id, client_id: getClientId() } });
+    } catch {
+      return toast.error("Couldn't delete project");
+    }
     setProjects((p) => p?.filter((x) => x.id !== id) ?? null);
     toast.success("Deleted");
   };
+
 
   const grouped = groupByDay(projects ?? []);
 
