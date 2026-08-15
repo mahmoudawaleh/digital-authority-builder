@@ -57,21 +57,21 @@ function StudioPage() {
     const id = search.project;
     if (!id || id === loadedId) return;
     (async () => {
-      const { data, error } = await supabase
-        .from("studio_projects")
-        .select("*")
-        .eq("id", id)
-        .maybeSingle();
-      if (error || !data) {
+      try {
+        const { project } = await getStudioProject({
+          data: { id, client_id: getClientId() },
+        });
+        if (!project) throw new Error("not found");
+        setActive(project.tool as ToolId);
+        setInputs((project.inputs ?? {}) as Record<string, string>);
+        setOutput(project.output ?? "");
+        setLoadedId(id);
+      } catch {
         toast.error("Couldn't load project");
-        return;
       }
-      setActive(data.tool as ToolId);
-      setInputs((data.inputs ?? {}) as Record<string, string>);
-      setOutput(data.output ?? "");
-      setLoadedId(id);
     })();
   }, [search.project, loadedId]);
+
 
   const setField = (k: string, v: string) => setInputs((p) => ({ ...p, [k]: v }));
 
