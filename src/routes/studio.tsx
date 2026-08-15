@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, useSearch, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { getStudioProject, saveStudioProject } from "@/lib/studio-projects.functions";
 import { getClientId } from "@/lib/client-id";
 import { toast } from "sonner";
 
