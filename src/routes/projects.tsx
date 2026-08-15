@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 import { getClientId } from "@/lib/client-id";
+import { listStudioProjects, deleteStudioProject } from "@/lib/studio-projects.functions";
 import { toast } from "sonner";
+
 
 type Project = {
   id: string;
