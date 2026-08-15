@@ -128,24 +128,21 @@ function StudioPage() {
       inputs,
       output,
     };
-    if (loadedId) {
-      const { error } = await supabase
-        .from("studio_projects")
-        .update({ ...payload, updated_at: new Date().toISOString() })
-        .eq("id", loadedId);
-      if (error) return toast.error("Couldn't update project");
-      toast.success("Project updated");
-    } else {
-      const { data, error } = await supabase
-        .from("studio_projects")
-        .insert(payload)
-        .select("id")
-        .single();
-      if (error || !data) return toast.error("Couldn't save project");
-      setLoadedId(data.id);
-      navigate({ to: "/studio", search: { project: data.id } });
-      toast.success("Saved to Projects");
+    try {
+      const { id } = await saveStudioProject({
+        data: loadedId ? { ...payload, id: loadedId } : payload,
+      });
+      if (loadedId) {
+        toast.success("Project updated");
+      } else {
+        setLoadedId(id);
+        navigate({ to: "/studio", search: { project: id } });
+        toast.success("Saved to Projects");
+      }
+    } catch {
+      toast.error(loadedId ? "Couldn't update project" : "Couldn't save project");
     }
+
   };
 
   const copy = async () => {
