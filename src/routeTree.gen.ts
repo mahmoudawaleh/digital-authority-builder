@@ -17,6 +17,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as RankingsRouteImport } from './routes/rankings'
 import { Route as StudioRouteImport } from './routes/studio'
+import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as PSlugRouteImport } from './routes/p.$slug'
 import { Route as ApiStudioGenerateRouteImport } from './routes/api/studio.generate'
 
@@ -60,6 +61,11 @@ const StudioRoute = StudioRouteImport.update({
   path: '/studio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/health',
+  path: '/api/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PSlugRoute = PSlugRouteImport.update({
   id: '/p/$slug',
   path: '/p/$slug',
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/projects': typeof ProjectsRoute
   '/rankings': typeof RankingsRoute
   '/studio': typeof StudioRoute
+  '/api/health': typeof ApiHealthRoute
   '/p/$slug': typeof PSlugRoute
   '/api/studio/generate': typeof ApiStudioGenerateRoute
 }
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/projects': typeof ProjectsRoute
   '/rankings': typeof RankingsRoute
   '/studio': typeof StudioRoute
+  '/api/health': typeof ApiHealthRoute
   '/p/$slug': typeof PSlugRoute
   '/api/studio/generate': typeof ApiStudioGenerateRoute
 }
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/projects': typeof ProjectsRoute
   '/rankings': typeof RankingsRoute
   '/studio': typeof StudioRoute
+  '/api/health': typeof ApiHealthRoute
   '/p/$slug': typeof PSlugRoute
   '/api/studio/generate': typeof ApiStudioGenerateRoute
 }
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/rankings'
     | '/studio'
+    | '/api/health'
     | '/p/$slug'
     | '/api/studio/generate'
   fileRoutesByTo: FileRoutesByTo
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/rankings'
     | '/studio'
+    | '/api/health'
     | '/p/$slug'
     | '/api/studio/generate'
   id:
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/rankings'
     | '/studio'
+    | '/api/health'
     | '/p/$slug'
     | '/api/studio/generate'
   fileRoutesById: FileRoutesById
@@ -156,6 +168,7 @@ export interface RootRouteChildren {
   ProjectsRoute: typeof ProjectsRoute
   RankingsRoute: typeof RankingsRoute
   StudioRoute: typeof StudioRoute
+  ApiHealthRoute: typeof ApiHealthRoute
   PSlugRoute: typeof PSlugRoute
   ApiStudioGenerateRoute: typeof ApiStudioGenerateRoute
 }
@@ -218,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/health': {
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/p/$slug': {
       id: '/p/$slug'
       path: '/p/$slug'
@@ -244,6 +264,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsRoute: ProjectsRoute,
   RankingsRoute: RankingsRoute,
   StudioRoute: StudioRoute,
+  ApiHealthRoute: ApiHealthRoute,
   PSlugRoute: PSlugRoute,
   ApiStudioGenerateRoute: ApiStudioGenerateRoute,
 }

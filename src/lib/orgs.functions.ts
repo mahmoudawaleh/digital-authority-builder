@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 export type OrgRow = {
   id: string;
@@ -40,6 +39,7 @@ const ListInput = z.object({
 export const listOrganizations = createServerFn({ method: "GET" })
   .inputValidator((d: unknown) => ListInput.parse(d ?? {}))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     let q = supabaseAdmin.from("organizations").select("*").limit(data.limit);
     if (data.category && data.category !== "All Categories") q = q.eq("category", data.category);
     if (data.city && data.city !== "All Cities") q = q.eq("city", data.city);
@@ -56,6 +56,7 @@ export const listOrganizations = createServerFn({ method: "GET" })
 export const getOrganizationBySlug = createServerFn({ method: "GET" })
   .inputValidator((d: unknown) => z.object({ slug: z.string().min(1) }).parse(d))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row, error } = await supabaseAdmin
       .from("organizations").select("*").eq("slug", data.slug).maybeSingle();
     if (error) throw new Error(error.message);
@@ -65,6 +66,7 @@ export const getOrganizationBySlug = createServerFn({ method: "GET" })
 export const getOrganizationsByOwner = createServerFn({ method: "GET" })
   .inputValidator((d: unknown) => z.object({ owner_client_id: z.string().min(1) }).parse(d))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: rows, error } = await supabaseAdmin
       .from("organizations").select("*")
       .eq("owner_client_id", data.owner_client_id)
@@ -108,6 +110,7 @@ const UpsertInput = z.object({
 export const upsertOrganization = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => UpsertInput.parse(d))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const completeness = computeCompleteness(data);
     const trust_score = Math.min(100, 40 + Math.round(completeness * 0.5));
     const payload = {
@@ -135,4 +138,70 @@ export const upsertOrganization = createServerFn({ method: "POST" })
       .from("organizations").insert({ ...payload, slug }).select("*").single();
     if (error) throw new Error(error.message);
     return { organization: row as OrgRow };
+  });
+
+// ---- Dashboard metrics (all values derived from stored rows; nothing simulated) ----
+export type DashboardData = {
+  organization: OrgRow | null;
+  categoryRank: number | null;
+  categoryTotal: number;
+  overallRank: number | null;
+  overallTotal: number;
+  studioProjects: number;
+  lastStudioAt: string | null;
+  generatedAt: string;
+};
+
+export const getDashboard = createServerFn({ method: "GET" })
+  .inputValidator((d: unknown) => z.object({ owner_client_id: z.string().min(1) }).parse(d))
+  .handler(async ({ data }): Promise<DashboardData> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const generatedAt = new Date().toISOString();
+
+    const { data: owned, error: ownedErr } = await supabaseAdmin
+      .from("organizations").select("*")
+      .eq("owner_client_id", data.owner_client_id)
+      .order("updated_at", { ascending: false }).limit(1);
+    if (ownedErr) throw new Error(ownedErr.message);
+    const org = (owned?.[0] ?? null) as OrgRow | null;
+
+    const { count: overallTotal } = await supabaseAdmin
+      .from("organizations").select("id", { count: "exact", head: true });
+
+    const { count: projectCount } = await supabaseAdmin
+      .from("studio_projects").select("id", { count: "exact", head: true })
+      .eq("client_id", data.owner_client_id);
+    const { data: lastProj } = await supabaseAdmin
+      .from("studio_projects").select("created_at")
+      .eq("client_id", data.owner_client_id)
+      .order("created_at", { ascending: false }).limit(1);
+
+    let categoryRank: number | null = null;
+    let categoryTotal = 0;
+    let overallRank: number | null = null;
+    if (org) {
+      const { count: catTotal } = await supabaseAdmin
+        .from("organizations").select("id", { count: "exact", head: true })
+        .eq("category", org.category);
+      categoryTotal = catTotal ?? 0;
+      const { count: aheadInCat } = await supabaseAdmin
+        .from("organizations").select("id", { count: "exact", head: true })
+        .eq("category", org.category).gt("trust_score", org.trust_score);
+      categoryRank = (aheadInCat ?? 0) + 1;
+      const { count: aheadOverall } = await supabaseAdmin
+        .from("organizations").select("id", { count: "exact", head: true })
+        .gt("trust_score", org.trust_score);
+      overallRank = (aheadOverall ?? 0) + 1;
+    }
+
+    return {
+      organization: org,
+      categoryRank,
+      categoryTotal,
+      overallRank,
+      overallTotal: overallTotal ?? 0,
+      studioProjects: projectCount ?? 0,
+      lastStudioAt: lastProj?.[0]?.created_at ?? null,
+      generatedAt,
+    };
   });

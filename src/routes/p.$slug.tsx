@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { getOrganizationBySlug, type OrgRow } from "@/lib/orgs.functions";
 
@@ -62,8 +62,14 @@ function PublicProfile() {
   const [lang, setLang] = useState<"so" | "en">("so");
   const bio = (lang === "so" ? o.bio_so : o.bio_en) || o.bio_en || o.bio_so || "";
 
-  const profileUrl = typeof window !== "undefined" ? window.location.href : `https://m2.so/p/${o.slug}`;
+  // Resolved only after hydration so SSR and first client render match.
+  const fallbackUrl = `https://m2.so/p/${o.slug}`;
+  const [profileUrl, setProfileUrl] = useState(fallbackUrl);
+  useEffect(() => {
+    setProfileUrl(window.location.href);
+  }, []);
   const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(profileUrl)}`;
+
 
   const waLink = o.whatsapp ? `https://wa.me/${o.whatsapp.replace(/\D/g, "")}` : null;
   const telLink = o.phone ? `tel:${o.phone}` : null;
