@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 export type OrgRow = {
   id: string;
@@ -40,6 +39,7 @@ const ListInput = z.object({
 export const listOrganizations = createServerFn({ method: "GET" })
   .inputValidator((d: unknown) => ListInput.parse(d ?? {}))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     let q = supabaseAdmin.from("organizations").select("*").limit(data.limit);
     if (data.category && data.category !== "All Categories") q = q.eq("category", data.category);
     if (data.city && data.city !== "All Cities") q = q.eq("city", data.city);
@@ -56,6 +56,7 @@ export const listOrganizations = createServerFn({ method: "GET" })
 export const getOrganizationBySlug = createServerFn({ method: "GET" })
   .inputValidator((d: unknown) => z.object({ slug: z.string().min(1) }).parse(d))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row, error } = await supabaseAdmin
       .from("organizations").select("*").eq("slug", data.slug).maybeSingle();
     if (error) throw new Error(error.message);
@@ -65,6 +66,7 @@ export const getOrganizationBySlug = createServerFn({ method: "GET" })
 export const getOrganizationsByOwner = createServerFn({ method: "GET" })
   .inputValidator((d: unknown) => z.object({ owner_client_id: z.string().min(1) }).parse(d))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: rows, error } = await supabaseAdmin
       .from("organizations").select("*")
       .eq("owner_client_id", data.owner_client_id)
@@ -108,6 +110,7 @@ const UpsertInput = z.object({
 export const upsertOrganization = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => UpsertInput.parse(d))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const completeness = computeCompleteness(data);
     const trust_score = Math.min(100, 40 + Math.round(completeness * 0.5));
     const payload = {
