@@ -3,6 +3,8 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -78,7 +80,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 30_000 } } }));
   return (
+    <QueryClientProvider client={queryClient}>
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
       <main className="flex-1 pt-[68px]">
@@ -87,5 +91,6 @@ function RootComponent() {
       <SiteFooter />
       <Toaster richColors position="top-right" />
     </div>
+    </QueryClientProvider>
   );
 }
