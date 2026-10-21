@@ -1,1 +1,2 @@
 - [ ] Review UNIVERSAL_VIBECODED_PLATFORM_ONTOLOGY_v2 doc and align roadmap
+- [ ] Expose score sources, freshness, and evidence across rankings, profiles, dashboard, and illustrative scores.
