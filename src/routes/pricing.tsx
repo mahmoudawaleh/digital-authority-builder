@@ -12,6 +12,8 @@ export const Route = createFileRoute("/pricing")({
           "Simple pricing for businesses of every size. Start free, upgrade for premium ranking, AI Studio access, and competitor intelligence.",
       },
       { property: "og:title", content: "Simple, Honest Pricing — M2" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content: "Free profile forever. Upgrade for premium authority tools.",

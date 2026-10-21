@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { getOrganizationBySlug, type OrgRow } from "@/lib/orgs.functions";
+import { ScoreEvidence } from "@/components/score-evidence";
 
 export const Route = createFileRoute("/p/$slug")({
   loader: async ({ params }) => {
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/p/$slug")({
         { property: "og:title", content: `${o.name} — Verified on M2` },
         { property: "og:description", content: desc },
         { property: "og:type", content: "profile" },
-        ...(o.logo_url ? [{ property: "og:image", content: o.logo_url }] : []),
+        ...(o.logo_url?.startsWith("https://") ? [{ property: "og:image", content: o.logo_url }, { name: "twitter:image", content: o.logo_url }] : []),
         { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: `/p/${o.slug}` }],
@@ -132,6 +133,11 @@ function PublicProfile() {
           </div>
         </div>
       </div>
+
+      <details className="mt-6 border-y border-border py-4" open>
+        <summary className="cursor-pointer font-serif text-xl font-semibold">Authority score · Sources & evidence</summary>
+        <div className="mt-5"><ScoreEvidence organization={o} /></div>
+      </details>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_320px]">
         <div>

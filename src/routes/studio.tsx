@@ -11,6 +11,10 @@ export const Route = createFileRoute("/studio")({
   head: () => ({
     meta: [
       { title: "AI Studio — Generate Authority Content | M2" },
+      { property: "og:title", content: "M2 AI Content Studio" },
+      { property: "og:description", content: "Generate business bios, blog posts, social content, and press releases." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         name: "description",
         content:
