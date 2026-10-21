@@ -27,6 +27,10 @@ export const Route = createFileRoute("/projects")({
   head: () => ({
     meta: [
       { title: "My Projects — Saved AI Studio Content | M2" },
+      { property: "og:title", content: "Saved M2 Studio Projects" },
+      { property: "og:description", content: "Reopen your dated AI Studio projects to refine your content." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         name: "description",
         content:

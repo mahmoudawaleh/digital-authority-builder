@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { SectionLabel } from "@/components/score-card";
 import { listOrganizations, type OrgRow } from "@/lib/orgs.functions";
 import { ScoreEvidenceButton } from "@/components/score-evidence";

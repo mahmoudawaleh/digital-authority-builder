@@ -14,6 +14,10 @@ export const Route = createFileRoute("/profile")({
     meta: [
       { title: "Your Authority Profile — M2" },
       { name: "description", content: "Claim and customize your verified digital authority profile on M2." },
+      { property: "og:title", content: "Your Authority Profile — M2" },
+      { property: "og:description", content: "Edit your business profile and see the fields behind your score estimate." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ProfilePage,
