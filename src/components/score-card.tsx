@@ -21,7 +21,7 @@ export function ScoreCard({
 }) {
   return (
     <div className="rounded-3xl border border-border bg-card p-7 shadow-elegant">
-      <div className="mb-4 font-serif text-lg font-semibold">Live Authority Score</div>
+      <div className="mb-4 font-serif text-lg font-semibold">Illustrative Authority Score</div>
 
       <div className="mb-4 flex items-center gap-3 rounded-xl bg-cream p-3">
         <div
@@ -38,7 +38,7 @@ export function ScoreCard({
           </div>
         </div>
         <span className="rounded-md bg-primary-pale px-2 py-0.5 text-xs font-semibold text-primary">
-          ✓ Verified
+          Example
         </span>
       </div>
 
@@ -63,6 +63,7 @@ export function ScoreCard({
           </div>
         ))}
       </div>
+      <p className="mt-5 text-xs text-ink-muted">Source: fixed demonstration values. No retrieval or measurement date; these scores and dimensions are not calculated from this business’s records and have no supporting audit evidence.</p>
     </div>
   );
 }

@@ -12,6 +12,8 @@ export const Route = createFileRoute("/")({
           "The digital intelligence platform that transforms your business into a trusted, high-ranking authority across Google, AI search, and social media.",
       },
       { property: "og:title", content: "M2 — Digital Authority Engine" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content:
@@ -111,7 +113,7 @@ function HomePage() {
 
         <div className="relative hidden md:block">
           <div className="absolute -top-5 right-0 z-10 animate-float rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold text-primary shadow-soft">
-            📈 +47% Visibility Boost
+            Illustrative preview
           </div>
           <div
             className="absolute bottom-5 -left-5 z-10 animate-float rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold text-gold shadow-soft"
@@ -186,7 +188,7 @@ function HomePage() {
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div>
               <SectionLabel className="!text-gold-light before:!hidden [&::before]:!bg-gold-light">
-                Live Rankings
+                Illustrative rankings
               </SectionLabel>
               <h2 className="mt-3 font-serif text-4xl font-bold text-white">
                 Top Businesses in Somaliland
@@ -196,6 +198,8 @@ function HomePage() {
               <Link to="/rankings">View Full Rankings →</Link>
             </Button>
           </div>
+
+          <p className="mb-5 text-sm text-primary-foreground">Source: fixed sample values, not the current M2 ranking records. No calculation date or independent evidence is available. <Link to="/rankings" className="underline">Open stored rankings and evidence →</Link></p>
 
           <div className="hidden grid-cols-[60px_1fr_140px_100px_120px_120px] gap-4 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white/40 md:grid">
             <div>Rank</div>

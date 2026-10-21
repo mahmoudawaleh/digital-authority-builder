@@ -227,6 +227,7 @@ function ProfilePage() {
             <div className="font-serif text-5xl font-bold leading-none text-gold-light">{trustScore}</div>
             <div className="mt-2 text-[11px] font-semibold uppercase tracking-widest text-white/50">Authority Score</div>
           </div>
+          <p className="mt-4 text-xs text-primary-foreground">Draft estimate · Source: unsaved form fields. {completeness}% of 11 fields filled. Score = 40 + round(completeness × 0.5) = {trustScore}. Recalculated as you edit; not a saved or independently verified measurement. SEO, traffic, backlinks, and AI visibility are not measured.</p>
           <div className="mt-7 border-t border-white/10 pt-5">
             <div className="font-serif text-2xl font-semibold">{form.name || "Your business"}</div>
             <div className="mt-1 text-sm text-white/60">{form.category} · {form.city}</div>

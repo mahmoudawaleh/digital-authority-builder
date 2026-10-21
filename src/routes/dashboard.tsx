@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { getClientId } from "@/lib/client-id";
 import { getDashboard, type OrgRow } from "@/lib/orgs.functions";
+import { ScoreEvidenceButton } from "@/components/score-evidence";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -61,7 +62,10 @@ function DashboardPage() {
 
   const { data, isPending, isError, error, refetch, isFetching } = useQuery({
     queryKey: ["dashboard", clientId],
-    queryFn: () => fetchDashboard({ data: { owner_client_id: clientId! } }),
+    queryFn: () => {
+      if (!clientId) throw new Error("No browser profile identifier");
+      return fetchDashboard({ data: { owner_client_id: clientId } });
+    },
     enabled: !!clientId,
   });
 
@@ -113,6 +117,7 @@ function DashboardPage() {
     );
   }
 
+  if (!data) return null;
   const dims = dimensions(o);
   const actions = [
     o.completeness < 100 && { icon: "📝", bg: "bg-primary-pale", title: "Complete your profile fields", sub: `${100 - o.completeness}% still empty`, to: "/profile" as const },
@@ -176,7 +181,7 @@ function DashboardPage() {
         <div className="rounded-2xl border border-border bg-card p-7 lg:col-span-2">
           <div className="mb-5 flex items-center justify-between">
             <h2 className="font-serif text-xl font-semibold">Authority Score Breakdown</h2>
-            <Link to="/profile" className="text-sm font-semibold text-primary hover:underline">Improve →</Link>
+            <ScoreEvidenceButton organization={o} retrievedAt={data.generatedAt} ranking={`Category: #${data.categoryRank} of ${data.categoryTotal} in ${o.category}. Overall: #${data.overallRank} of ${data.overallTotal} M2 records. Counts queried during this dashboard retrieval.`} />
           </div>
           <div className="mb-6 text-center">
             <div className="font-serif text-6xl font-bold text-primary">{o.trust_score}</div>
@@ -200,8 +205,7 @@ function DashboardPage() {
             ))}
           </div>
           <p className="mt-6 text-xs text-ink-muted">
-            Sub-scores are <strong>derived</strong> from the fields stored on your profile. Traffic and
-            backlink metrics are <strong>unavailable</strong> until an analytics source is connected.
+            These indicators are not weighted inputs to the overall score. Verification maps official/verified/pending/none to 100/80/40/10; contacts count phone, WhatsApp, and email; website presence is 100 or 0; each social link adds 25 (maximum 100); each language bio adds 50. Stored claims do not prove independent verification, reachability, or audience reach.
           </p>
         </div>
 

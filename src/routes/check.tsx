@@ -12,6 +12,8 @@ export const Route = createFileRoute("/check")({
           "Enter any business name or website. Our AI engine analyzes it across 6 dimensions and gives you a complete authority score with actionable recommendations.",
       },
       { property: "og:title", content: "Free Authority Score Checker — M2" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content: "Get a complete digital authority score in seconds. No account needed.",
@@ -69,8 +71,7 @@ function CheckPage() {
       <div className="rounded-3xl border border-border bg-card p-8 shadow-soft md:p-10">
         <h1 className="font-serif text-4xl font-bold text-ink md:text-5xl">Digital Score Checker</h1>
         <p className="mt-3 text-base leading-relaxed text-ink-muted">
-          Enter any business name or website URL and our AI engine will analyze it across 6
-          dimensions and give you a complete authority score with actionable recommendations.
+          This checker is a demonstration, not a live website audit. It shows the same example score and recommendations for every entry. For stored scores with supporting evidence, visit the rankings.
         </p>
 
         <form onSubmit={analyze} className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -82,17 +83,18 @@ function CheckPage() {
             className="flex-1 rounded-xl border-2 border-surface bg-card px-4 py-3 text-base outline-none transition-colors focus:border-primary-mid focus:ring-2 focus:ring-primary/15"
           />
           <Button type="submit" size="lg" disabled={loading}>
-            {loading ? "Analyzing…" : "Analyze Now →"}
+            {loading ? "Loading example…" : "Show example →"}
           </Button>
         </form>
 
         <p className="mt-3 text-xs text-ink-muted">
-          ✓ No account needed · ✓ Results in seconds · ✓ Powered by AI
+          Source: fixed demonstration data · No external analysis is performed
         </p>
       </div>
 
       {(loading || results) && (
         <div className="mt-8 animate-fade-in-up space-y-5">
+          <p className="border-y border-border py-4 text-sm text-ink-muted"><strong>Example only.</strong> Score 73 and all dimensions and recommendations are hardcoded, not measurements of {input}. Freshness: no measurement date. Evidence: no crawl, analytics, or audit documents. Revenue and performance figures below are illustrative, not factual findings. <Link to="/rankings" className="text-primary underline">View stored scores and evidence</Link>.</p>
           <div className="grid gap-5 md:grid-cols-2">
             <div className="rounded-3xl bg-gradient-brand p-9 text-center text-white">
               <div className="font-serif text-7xl font-bold leading-none text-gold-light md:text-8xl">
