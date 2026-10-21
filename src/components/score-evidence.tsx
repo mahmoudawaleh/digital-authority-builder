@@ -40,5 +40,5 @@ export function ScoreEvidence({ organization: o, ranking, retrievedAt }: Props) 
 }
 
 export function ScoreEvidenceButton(props: Props) {
-  return <Dialog><DialogTrigger asChild><Button variant="outline" size="sm" aria-label={`Score evidence for ${props.organization.name}`}><FileSearch className="h-4 w-4" /> Evidence</Button></DialogTrigger><DialogContent className="max-h-[85dvh] w-[calc(100%-2rem)] max-w-2xl overflow-y-auto"><DialogHeader><DialogTitle>{props.organization.name} · Score evidence</DialogTitle><DialogDescription>Sources, freshness, and supporting records behind this score.</DialogDescription></DialogHeader><ScoreEvidence {...props} /></DialogContent></Dialog>;
+  return <Dialog><DialogTrigger asChild><Button variant="outline" size="sm" aria-label={`Score evidence for ${props.organization.name}`}><FileSearch className="h-4 w-4" /> Evidence</Button></DialogTrigger><DialogContent className="max-h-[85dvh] w-[calc(100%_-_2rem)] max-w-2xl overflow-y-auto"><DialogHeader><DialogTitle>{props.organization.name} · Score evidence</DialogTitle><DialogDescription>Sources, freshness, and supporting records behind this score.</DialogDescription></DialogHeader><ScoreEvidence {...props} /></DialogContent></Dialog>;
 }
