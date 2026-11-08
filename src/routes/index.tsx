@@ -224,7 +224,7 @@ function HomePage() {
           <div className="flex flex-col gap-2">
             {topRanks.map((r) => (
               <div
-                key={r.rank}
+                key={r.name}
                 className="grid grid-cols-[50px_1fr_80px] items-center gap-4 rounded-xl border border-white/5 bg-white/5 p-4 transition-colors hover:bg-white/10 md:grid-cols-[60px_1fr_140px_100px_120px_120px] md:px-5"
               >
                 <div className="font-serif text-2xl font-bold text-gold-light">#{r.rank}</div>
