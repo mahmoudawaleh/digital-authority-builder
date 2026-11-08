@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { ScoreCard, SectionLabel } from "@/components/score-card";
+import { listOrganizations } from "@/lib/orgs.functions";
+import { evidenceDate } from "@/lib/score-evidence";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -21,6 +23,10 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
+  loader: async () => {
+    const { organizations } = await listOrganizations({ data: { sort: "score_desc", limit: 200 } });
+    return { organizations, retrievedAt: new Date().toISOString() };
+  },
   component: HomePage,
 });
 
@@ -57,15 +63,19 @@ const features = [
   },
 ];
 
-const topRanks = [
-  { rank: 1, name: "Dahabshiil Bank", city: "Hargeisa", category: "Banking", score: 94, status: "Verified", color: "var(--primary)" },
-  { rank: 2, name: "Telesom", city: "Hargeisa", category: "Telecom", score: 91, status: "Premium", color: "var(--gold)" },
-  { rank: 3, name: "Somtel", city: "Hargeisa", category: "Telecom", score: 88, status: "Verified", color: "#5a7fbe" },
-  { rank: 4, name: "Edna Hospital", city: "Hargeisa", category: "Healthcare", score: 86, status: "Verified", color: "#c0392b" },
-  { rank: 5, name: "University of Hargeisa", city: "Hargeisa", category: "Education", score: 84, status: "Verified", color: "#2d5a7f" },
-];
+const STATUS_LABEL: Record<string, string> = { official: "Official", verified: "Verified", pending: "Pending", none: "Unverified" };
 
 function HomePage() {
+  const { organizations, retrievedAt } = Route.useLoaderData();
+  const topRanks = organizations.slice(0, 5).map((o) => ({
+    rank: organizations.filter((x) => x.trust_score > o.trust_score).length + 1,
+    name: o.name, city: o.city, category: o.category, score: o.trust_score,
+    status: STATUS_LABEL[o.verification_status] ?? o.verification_status,
+    color: o.brand_color || "var(--primary)",
+  }));
+  const categories = new Set(organizations.map((o) => o.category)).size;
+  const cities = new Set(organizations.map((o) => o.city)).size;
+  const verified = organizations.filter((o) => o.verification_status === "verified" || o.verification_status === "official").length;
   return (
     <div>
       {/* HERO */}
@@ -142,10 +152,10 @@ function HomePage() {
       <section className="bg-gradient-brand">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-6 py-12 text-center md:grid-cols-4 md:px-10">
           {[
-            { num: "1,240+", label: "Businesses Indexed" },
-            { num: "18", label: "Industry Categories" },
-            { num: "94K+", label: "Profile Views / Month" },
-            { num: "$2.1M", label: "Business Impact Tracked" },
+            { num: String(organizations.length), label: "Profiles on M2" },
+            { num: String(categories), label: "Categories" },
+            { num: String(cities), label: "Cities" },
+            { num: String(verified), label: "Marked verified or official" },
           ].map((s) => (
             <div key={s.label}>
               <div className="font-serif text-4xl font-bold text-gold-light md:text-5xl">{s.num}</div>
@@ -153,6 +163,7 @@ function HomePage() {
             </div>
           ))}
         </div>
+        <p className="pb-6 text-center text-xs text-white/60">Counted from M2 records on {evidenceDate(retrievedAt)}. Verification labels are stored statuses, not independent audits.</p>
       </section>
 
       {/* FEATURES */}
@@ -188,7 +199,7 @@ function HomePage() {
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div>
               <SectionLabel className="!text-gold-light before:!hidden [&::before]:!bg-gold-light">
-                Illustrative rankings
+                Current M2 rankings
               </SectionLabel>
               <h2 className="mt-3 font-serif text-4xl font-bold text-white">
                 Top Businesses in Somaliland
@@ -199,7 +210,7 @@ function HomePage() {
             </Button>
           </div>
 
-          <p className="mb-5 text-sm text-primary-foreground">Source: fixed sample values, not the current M2 ranking records. No calculation date or independent evidence is available. <Link to="/rankings" className="underline">Open stored rankings and evidence →</Link></p>
+          <p className="mb-5 text-sm text-primary-foreground">Source: stored M2 profile records, retrieved {evidenceDate(retrievedAt)}. Scores reflect profile completeness, not independent measurements. <Link to="/rankings" className="underline">Open stored rankings and evidence →</Link></p>
 
           <div className="hidden grid-cols-[60px_1fr_140px_100px_120px_120px] gap-4 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white/40 md:grid">
             <div>Rank</div>

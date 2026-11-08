@@ -12,10 +12,10 @@ export function SiteFooter() {
         </div>
 
         <nav className="flex flex-wrap gap-5">
-          <Link to="/" className="hover:text-gold-light">About</Link>
-          <Link to="/" className="hover:text-gold-light">API</Link>
-          <Link to="/" className="hover:text-gold-light">Privacy</Link>
-          <Link to="/" className="hover:text-gold-light">Contact</Link>
+          <Link to="/rankings" className="hover:text-gold-light">Rankings</Link>
+          <Link to="/check" className="hover:text-gold-light">Score check</Link>
+          <Link to="/studio" className="hover:text-gold-light">AI Studio</Link>
+          <Link to="/pricing" className="hover:text-gold-light">Pricing</Link>
         </nav>
 
         <div className="w-full text-center text-white/35 md:w-auto md:text-right">
