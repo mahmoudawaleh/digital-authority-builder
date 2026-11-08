@@ -139,16 +139,16 @@ function ProfilePage() {
         )}
       </div>
 
-      <div className="grid gap-7 lg:grid-cols-[1fr_360px]">
-        <div className="rounded-2xl border border-border bg-card p-7 md:p-8">
-          <div className="mb-7 flex items-center gap-5">
+      <div className="grid grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="min-w-0 rounded-2xl border border-border bg-card p-5 md:p-8">
+          <div className="mb-7 flex flex-wrap items-center gap-5">
             <div
               className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-primary-light bg-primary-pale text-3xl"
               style={form.logo_url ? { backgroundImage: `url(${form.logo_url})`, backgroundSize: "cover" } : undefined}
             >
               {!form.logo_url && "🏢"}
             </div>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1 basis-40">
               <Field label="Logo URL">
                 <input
                   value={form.logo_url}
