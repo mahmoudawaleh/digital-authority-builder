@@ -1,2 +1,7 @@
 - [ ] Review UNIVERSAL_VIBECODED_PLATFORM_ONTOLOGY_v2 doc and align roadmap
 - [x] Expose score sources, freshness, and evidence across rankings, profiles, dashboard, and illustrative scores.
+- [x] Review Universal Master Execution Prompt; record initial audit, page checks and release risks.
+- [ ] Account ownership and AI-abuse remediation — pending phased plan approval and user-profile decision.
+- [ ] Correct unsupported feature, pricing and seeded verification claims without deleting records.
+- [ ] Verify real profile and Studio save/reopen workflows, permissions, accessibility and performance.
+- [ ] Complete project documentation and verify hosted backup, recovery and release gates.
